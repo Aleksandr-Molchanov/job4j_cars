@@ -8,7 +8,7 @@ create table if not exists driver(
 
 create table if not exists car(
     id serial primary key,
-    engine_id int not null unique references engine(id)
+    engine_id int not null references engine(id)
 );
 
 create table if not exists history_owner(
