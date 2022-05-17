@@ -4,21 +4,21 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "engine")
-public class Engine {
+@Table(name = "body")
+public class Body {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
+    private String type;
 
-    public Engine() {
+    public Body() {
     }
 
-    public Engine(int id, String name) {
+    public Body(int id, String type) {
         this.id = id;
-        this.name = name;
+        this.type = type;
     }
 
     public int getId() {
@@ -29,12 +29,12 @@ public class Engine {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -45,21 +45,20 @@ public class Engine {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Engine engine = (Engine) o;
-        return id == engine.id
-                && Objects.equals(name, engine.name);
+        Body body = (Body) o;
+        return id == body.id && Objects.equals(type, body.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, type);
     }
 
     @Override
     public String toString() {
-        return "Engine{"
+        return "Body{"
                 + "id=" + id
-                + ", name='" + name + '\''
+                + ", type='" + type + '\''
                 + '}';
     }
 }

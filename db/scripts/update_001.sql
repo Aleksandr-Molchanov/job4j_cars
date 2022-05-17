@@ -1,18 +1,47 @@
-create table if not exists engine(
-    id serial primary key
+CREATE TABLE IF NOT EXISTS engine(
+    id SERIAL PRIMARY KEY,
+    name TEXT
 );
 
-create table if not exists driver(
-    id serial primary key
+CREATE TABLE IF NOT EXISTS driver(
+    id SERIAL PRIMARY KEY
 );
 
-create table if not exists car(
-    id serial primary key,
-    engine_id int not null references engine(id)
+CREATE TABLE IF NOT EXISTS body(
+    id SERIAL PRIMARY KEY,
+    type TEXT
 );
 
-create table if not exists history_owner(
-    id serial primary key,
-    driver_id int not null references driver(id),
-    car_id int not null references car(id)
+CREATE TABLE IF NOT EXISTS brand(
+    id SERIAL PRIMARY KEY,
+    name TEXT
+);
+
+CREATE TABLE IF NOT EXISTS user(
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    email VARCHAR(255) UNIQUE,
+    password TEXT
+);
+
+CREATE TABLE IF NOT EXISTS car(
+    id SERIAL PRIMARY KEY,
+    engine_id INT NOT NULL REFERENCES engine(id),
+    brand_id INT NOT NULL REFERENCES brand(id),
+    body_id INT NOT NULL REFERENCES body(id)
+);
+
+CREATE TABLE IF NOT EXISTS history_owner(
+    id SERIAL PRIMARY KEY,
+    driver_id INT NOT NULL REFERENCES driver(id),
+    car_id INT NOT NULL REFERENCES car(id)
+);
+
+CREATE TABLE IF NOT EXISTS post(
+    id SERIAL PRIMARY KEY,
+    description TEXT,
+    car_id INT NOT NULL REFERENCES car(id),
+    photo BYTEA,
+    sold BOOLEAN,
+    user_id INT NOT NULL REFERENCES user(id)
 );

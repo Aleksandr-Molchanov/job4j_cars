@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "engine")
-public class Engine {
+@Table(name = "brand")
+public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,10 +13,10 @@ public class Engine {
 
     private String name;
 
-    public Engine() {
+    public Brand() {
     }
 
-    public Engine(int id, String name) {
+    public Brand(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -45,9 +45,8 @@ public class Engine {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Engine engine = (Engine) o;
-        return id == engine.id
-                && Objects.equals(name, engine.name);
+        Brand brand = (Brand) o;
+        return id == brand.id && Objects.equals(name, brand.name);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class Engine {
 
     @Override
     public String toString() {
-        return "Engine{"
+        return "Brand{"
                 + "id=" + id
                 + ", name='" + name + '\''
                 + '}';
