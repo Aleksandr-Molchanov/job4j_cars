@@ -48,8 +48,8 @@
                     <b>Категории:</b>
                 </p>
                 <p>
-                    <tr th:each="category: ${ad.category}">
-                        <td th:text="${category.name}" />
+                    <tr th:each="category: ${ad.car.category}">
+                        <td th:text="${ad.car.category.name}" />
                     </tr>
                 </p>
                 <p>
@@ -68,13 +68,13 @@
             </div>
         </div>
         <div class="btn-group" th:if="${user.name != 'Гость'}">
-            <form  th:action="@{|/setDone/${item.id}|}" method="GET">
+            <form  th:action="@{|/setDone/${ad.id}|}" method="GET">
                 <button type="submit" class="btn btn-primary mt-3" style="margin-right: 16px" >Выполнено</button>
             </form>
-            <form  th:action="@{|/formUpdateItem/${item.id}|}" method="GET">
+            <form  th:action="@{|/formUpdateAd/${ad.id}|}" method="GET">
                 <button type="submit" class="btn btn-primary mt-3" style="margin-right: 16px" >Редактировать</button>
             </form>
-            <form  th:action="@{|/deleteItem/${item.id}|}" method="GET">
+            <form  th:action="@{|/deleteAd/${ad.id}|}" method="GET">
                 <button type="submit" class="btn btn-primary mt-3" >Удалить</button>
             </form>
         </div>
