@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "post")
-public class Post {
+@Table(name = "ad")
+public class Ad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,21 +26,13 @@ public class Post {
 
     private boolean sold;
 
+    private boolean newCar;
+
     @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "USER_ID_FK"))
     private User user;
 
-    public Post() {
-    }
-
-    public Post(int id, String description, Date created, Car car, byte[] photo, boolean sold, User user) {
-        this.id = id;
-        this.description = description;
-        this.created = created;
-        this.car = car;
-        this.photo = photo;
-        this.sold = sold;
-        this.user = user;
+    public Ad() {
     }
 
     public int getId() {
@@ -91,6 +83,14 @@ public class Post {
         this.sold = sold;
     }
 
+    public boolean isNewCar() {
+        return newCar;
+    }
+
+    public void setNewCar(boolean newCar) {
+        this.newCar = newCar;
+    }
+
     public User getUser() {
         return user;
     }
@@ -107,13 +107,13 @@ public class Post {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Post post = (Post) o;
-        return id == post.id
-                && sold == post.sold
-                && Objects.equals(description, post.description)
-                && Objects.equals(car, post.car)
-                && Arrays.equals(photo, post.photo)
-                && Objects.equals(user, post.user);
+        Ad ad = (Ad) o;
+        return id == ad.id
+                && sold == ad.sold
+                && Objects.equals(description, ad.description)
+                && Objects.equals(car, ad.car)
+                && Arrays.equals(photo, ad.photo)
+                && Objects.equals(user, ad.user);
     }
 
     @Override

@@ -6,22 +6,21 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "brand")
-public class Brand {
-
+@Table(name = "category")
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    @OneToMany(mappedBy = "brand")
-    private List<Model> models = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+    private List<Body> bodies = new ArrayList<>();
 
-    public static Brand of(String name) {
-        Brand brand = new Brand();
-        brand.name = name;
-        return brand;
+    public static Category of(String name) {
+        Category category = new Category();
+        category.name = name;
+        return category;
     }
 
     public int getId() {
@@ -40,16 +39,16 @@ public class Brand {
         this.name = name;
     }
 
-    public List<Model> getModels() {
-        return models;
+    public List<Body> getBodies() {
+        return bodies;
     }
 
-    public void setModels(List<Model> models) {
-        this.models = models;
+    public void setBodies(List<Body> bodies) {
+        this.bodies = bodies;
     }
 
-    public void addModel(Model model) {
-        this.models.add(model);
+    public void addBody(Body body) {
+        this.bodies.add(body);
     }
 
     @Override
@@ -60,23 +59,23 @@ public class Brand {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Brand brand = (Brand) o;
-        return id == brand.id
-                && Objects.equals(name, brand.name)
-                && Objects.equals(models, brand.models);
+        Category category = (Category) o;
+        return id == category.id
+                && Objects.equals(name, category.name)
+                && Objects.equals(bodies, category.bodies);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, models);
+        return Objects.hash(id, name, bodies);
     }
 
     @Override
     public String toString() {
-        return "Brand{"
+        return "Category{"
                 + "id=" + id
                 + ", name='" + name + '\''
-                + ", models=" + models
+                + ", bodies=" + bodies
                 + '}';
     }
 }

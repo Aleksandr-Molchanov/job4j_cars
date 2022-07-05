@@ -1,27 +1,26 @@
 package ru.job4j.cars.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "brand")
-public class Brand {
-
+@Table(name = "model")
+public class Model {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    @OneToMany(mappedBy = "brand")
-    private List<Model> models = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "brand_id",  foreignKey = @ForeignKey(name = "BRAND_ID_FK"))
+    private Brand brand;
 
-    public static Brand of(String name) {
-        Brand brand = new Brand();
-        brand.name = name;
-        return brand;
+    public static Model of(String name, Brand brand) {
+        Model model = new Model();
+        model.name = name;
+        model.brand = brand;
+        return model;
     }
 
     public int getId() {
@@ -40,16 +39,12 @@ public class Brand {
         this.name = name;
     }
 
-    public List<Model> getModels() {
-        return models;
+    public Brand getBrand() {
+        return brand;
     }
 
-    public void setModels(List<Model> models) {
-        this.models = models;
-    }
-
-    public void addModel(Model model) {
-        this.models.add(model);
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     @Override
@@ -60,23 +55,23 @@ public class Brand {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Brand brand = (Brand) o;
-        return id == brand.id
-                && Objects.equals(name, brand.name)
-                && Objects.equals(models, brand.models);
+        Model model = (Model) o;
+        return id == model.id
+                && Objects.equals(name, model.name)
+                && Objects.equals(brand, model.brand);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, models);
+        return Objects.hash(id, name, brand);
     }
 
     @Override
     public String toString() {
-        return "Brand{"
+        return "Model{"
                 + "id=" + id
                 + ", name='" + name + '\''
-                + ", models=" + models
+                + ", brand=" + brand
                 + '}';
     }
 }

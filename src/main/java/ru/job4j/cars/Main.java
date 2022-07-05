@@ -1,4 +1,4 @@
-package ru.job4j;
+package ru.job4j.cars;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -20,6 +20,6 @@ public class Main {
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
-        System.out.println("Go to http://localhost:8080/Posts");
+        System.out.println("Go to http://localhost:8080/ads");
     }
 }
