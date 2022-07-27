@@ -52,12 +52,16 @@ public class AdService {
         return repository.findSoldAll(sold);
     }
 
+    public Collection<Ad> findNewCar(boolean newCar, boolean sold) {
+        return repository.findNewCar(newCar, sold);
+    }
+
     public void add(Ad ad) {
         repository.add(ad);
     }
 
-    public void update(Ad ad, String idCar) {
-        repository.update(ad, idCar);
+    public void update(Ad ad) {
+        repository.update(ad);
     }
 
     public void delete(int id) {
@@ -66,6 +70,14 @@ public class AdService {
 
     public void setSold(int id) {
         repository.setSold(id);
+    }
+
+    public List<Ad> findAdCategoryAndBodyAndBrandAndModel(String categoryName, String bodyType, String brandName, String modelName) {
+        return repository.findAdCategoryAndBodyAndBrandAndModel(categoryName, bodyType, brandName, modelName);
+    }
+
+    public List<Ad> findMyAds(String email) {
+        return repository.findMyAds(email);
     }
 
 }

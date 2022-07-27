@@ -17,6 +17,9 @@ public class FilterService {
         filter.put("idModel", 0);
         filter.put("idEngine", 0);
         filter.put("idCar", 0);
+        filter.put("allCar", 0);
+        filter.put("newCar", 0);
+        filter.put("oldCar", 0);
     }
 
     public Integer getCategory() {
@@ -65,5 +68,29 @@ public class FilterService {
 
     public void setCar(Integer id) {
         filter.replace("idCar", id);
+    }
+
+    public Integer getAllCar() {
+        return filter.get("allCar");
+    }
+
+    public void setAllCar(Integer id) {
+        filter.replace("allCar", id);
+    }
+
+    public Integer getNewCar() {
+        return filter.get("newCar");
+    }
+
+    public void setNewCar(Integer id) {
+        filter.replace("newCar", id);
+    }
+
+    public Integer getOldCar() {
+        return filter.get("oldCar");
+    }
+
+    public void setOldCar(Integer id) {
+        filter.replace("oldCar", id);
     }
 }

@@ -26,7 +26,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" th:href="@{/ads}">Все</a>
+                <a class="nav-item nav-link" th:href="@{/ads}" style="margin-right: 750px">На главную</a>
                 <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/formLogin}">
                     <span th:text="${user.name}"></span>
                     <span> | Войти</span>
@@ -44,11 +44,15 @@
                 Добавьте описание
             </div>
             <div class="card-body">
-                <form th:action="@{/addDescription}" method="POST">
+                <form th:action="@{/addDescription}" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="0"/>
                     <div class="form-group">
                         <label for="description">Фотография</label>
                         <input type="file" class="form-control" name="file" id="file">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Название</label>
+                        <input type="text" class="form-control" name="name" id="name">
                     </div>
                     <div class="form-group">
                         <label for="description">Описание</label>

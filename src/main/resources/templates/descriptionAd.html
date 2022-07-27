@@ -26,53 +26,88 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" th:href="@{/ads}">Все</a>
+                <a class="nav-item nav-link" th:href="@{/ads}" style="margin-right: 750px">На главную</a>
             </div>
+            <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/formLogin}">
+                <span th:text="${user.name}"></span>
+                <span> | Войти</span>
+            </a>
+            <a class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/logout}">
+                <span th:text="${user.name}"></span>
+                <span> | Выйти</span>
+            </a>
         </div>
     </nav>
     <div class="row pt-3">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Подробное описание
+                <h3><span th:text="${ad.name}"></span></h3>
             </div>
             <div class="card-body">
-                <p>
-                    <b>Описание:</b>
-                </p>
-                <p class="card-text" th:text="${ad.description}"/>
-                <p>
-                    <b>Время последнего изменения:</b>
-                </p>
-                <p class="card-text" th:text="${ad.created}"/>
-                <p>
-                    <b>Категории:</b>
-                </p>
-                <p>
-                    <tr th:each="category: ${ad.car.category}">
-                        <td th:text="${ad.car.category.name}" />
-                    </tr>
-                </p>
-                <p>
-                    <b>Автор задания:</b>
-                </p>
-                <p class="card-text" th:text="${ad.user.name}"/>
-                <p>
-                    <b>Статус:</b>
-                </p>
-                <span th:if="${ad.sold}">
-                    Продано
-                </span>
-                <span th:if="${!ad.sold}">
-                    Не продано
-                </span>
+                <table>
+                    <tbody>
+                    <td>
+                        <p>
+                            <b>Описание: </b>
+                            <span th:text="${ad.description}"/>
+                        </p>
+                        <p>
+                            <b>Добавлена: </b>
+                            <span th:text="${#dates.format(ad.created, 'dd-MMM-yyyy')}"></span>
+                        </p>
+                        <p>
+                            <b>Категория: </b>
+                            <span th:text="${ad.car.category.name}"/>
+                        </p>
+                        <p>
+                            <b>Кузов: </b>
+                            <span th:text="${ad.car.body.type}"/>
+                        </p>
+                        <p>
+                            <b>Бренд: </b>
+                            <span th:text="${ad.car.brand.name}"/>
+                        </p>
+                        <p>
+                            <b>Модель: </b>
+                            <span th:text="${ad.car.model.name}"/>
+                        </p>
+                        <p>
+                            <b>Тип двигателя: </b>
+                            <span th:text="${ad.car.engine.name}"/>
+                        </p>
+                        <p>
+                            <b>Пробег: </b>
+                            <span th:if="${ad.newCar}">
+                                Без пробега
+                            </span>
+                            <span th:if="${!ad.newCar}">
+                                С пробегом
+                            </span>
+                        </p>
+                        <p>
+                            <b>Статус: </b>
+                            <span th:if="${ad.sold}">
+                                Продано
+                            </span>
+                            <span th:if="${!ad.sold}">
+                                В продаже
+                            </span>
+                        </p>
+                        <p>
+                            <b>Автор объявления: </b>
+                            <span th:text="${ad.user.name}"/>
+                        </p>
+                    </td>
+                    <td>
+                        <img th:width="550" th:high="550" th:src="@{|/photoAd/${ad.id}|}">
+                    </td>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="btn-group" th:if="${user.name != 'Гость'}">
-            <form  th:action="@{|/setDone/${ad.id}|}" method="GET">
-                <button type="submit" class="btn btn-primary mt-3" style="margin-right: 16px" >Выполнено</button>
-            </form>
-            <form  th:action="@{|/formUpdateAd/${ad.id}|}" method="GET">
-                <button type="submit" class="btn btn-primary mt-3" style="margin-right: 16px" >Редактировать</button>
+        <div class="btn-group" th:if="${user.name != 'Гость' && user == ad.user}">
+            <form  th:action="@{|/setSold/${ad.id}|}" method="GET">
+                <button type="submit" class="btn btn-primary mt-3" style="margin-right: 16px" >Продано</button>
             </form>
             <form  th:action="@{|/deleteAd/${ad.id}|}" method="GET">
                 <button type="submit" class="btn btn-primary mt-3" >Удалить</button>

@@ -67,7 +67,7 @@ public class AdController {
             user.setName("Гость");
         }
         model.addAttribute("user", user);
-        model.addAttribute("ads", adService.findAll());
+        model.addAttribute("ads", adService.findSoldAll(false));
         return "ads";
     }
 
@@ -234,27 +234,51 @@ public class AdController {
         return response;
     }
 
+    @GetMapping("/descriptionAd/{adId}")
+    public String descriptionItem(Model model, @PathVariable("adId") int id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("ad", adService.findById(id));
+        return "descriptionAd";
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-    @GetMapping("/adsSold")
-    public String adsSold(Model model) {
-        model.addAttribute("ads", adService.findSoldAll(true));
+    @GetMapping("/adsNew")
+    public String adsNew(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("ads", adService.findNewCar(true, false));
         return "ads";
     }
 
-    @GetMapping("/adsNoSold")
-    public String adsNoSold(Model model) {
-        model.addAttribute("ads", adService.findSoldAll(false));
+    @GetMapping("/adsNoNew")
+    public String adsNoNew(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("ads", adService.findNewCar(false, false));
+        return "ads";
+    }
+
+    @GetMapping("/adsSold")
+    public String adsSold(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("ads", adService.findSoldAll(true));
         return "ads";
     }
 
@@ -266,31 +290,19 @@ public class AdController {
             user.setName("Гость");
         }
         model.addAttribute("user", user);
-        model.addAttribute("ads", adService.findAdWithCategory("Легковые"));
+        model.addAttribute("ads", adService.findACategoryAndSold("Легковые", false));
         return "ads";
     }
 
-    @GetMapping("/lorry")
-    public String lorry(Model model, HttpSession session) {
+    @GetMapping("/commercial")
+    public String commercial(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             user = new User();
             user.setName("Гость");
         }
         model.addAttribute("user", user);
-        model.addAttribute("ads", adService.findAdWithCategory("Грузовые"));
-        return "ads";
-    }
-
-    @GetMapping("/bus")
-    public String bus(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
-        model.addAttribute("ads", adService.findAdWithCategory("Автобусы"));
+        model.addAttribute("ads", adService.findACategoryAndSold("Коммерческие", false));
         return "ads";
     }
 
@@ -302,19 +314,153 @@ public class AdController {
             user.setName("Гость");
         }
         model.addAttribute("user", user);
-        model.addAttribute("ads", adService.findAdWithCategory("Спец. Техника"));
+        model.addAttribute("ads", adService.findACategoryAndSold("Спец. техника", false));
         return "ads";
     }
 
-    @GetMapping("/descriptionItem/{itemId}")
-    public String descriptionItem(Model model, @PathVariable("itemId") int id, HttpSession session) {
+    @GetMapping("/myAds")
+    public String myAds(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             user = new User();
             user.setName("Гость");
         }
         model.addAttribute("user", user);
-        model.addAttribute("ad", adService.findById(id));
-        return "descriptionAd";
+        model.addAttribute("ads", adService.findMyAds(user.getEmail()));
+        return "ads";
     }
+
+    @GetMapping("/formFilterCategory")
+    public String formFilterCategory(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        filterService.setCategory(0);
+        model.addAttribute("user", user);
+        model.addAttribute("category", categoryService.findAll());
+        return "filterCategory";
+    }
+
+    @PostMapping("/filterCategory")
+    public String filterCategory(@ModelAttribute Ad ad,
+                                 HttpSession session,
+                                 @RequestParam("category.id") String idCategory) {
+        User user = (User) session.getAttribute("user");
+        ad.setUser(user);
+        filterService.setCategory(Integer.parseInt(idCategory));
+        return "redirect:/formFilterBody";
+    }
+
+    @GetMapping("/formFilterBody")
+    public String formFilterBody(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        filterService.setBody(0);
+        model.addAttribute("user", user);
+        model.addAttribute("body", bodyService.findBodyByCategory(filterService.getCategory()));
+        return "filterBody";
+    }
+
+    @PostMapping("/filterBody")
+    public String filterBody(@ModelAttribute Ad ad,
+                             HttpSession session,
+                             @RequestParam("body.id") String idBody) {
+        User user = (User) session.getAttribute("user");
+        ad.setUser(user);
+        filterService.setBody(Integer.parseInt(idBody));
+        return "redirect:/formFilterBrand";
+    }
+
+    @GetMapping("/formFilterBrand")
+    public String formFilterBrand(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        filterService.setBrand(0);
+        model.addAttribute("user", user);
+        model.addAttribute("brand", brandService.findAll());
+        return "filterBrand";
+    }
+
+    @PostMapping("/filterBrand")
+    public String filterBrand(@ModelAttribute Ad ad,
+                              HttpSession session,
+                              @RequestParam("brand.id") String idBrand) {
+        User user = (User) session.getAttribute("user");
+        ad.setUser(user);
+        filterService.setBrand(Integer.parseInt(idBrand));
+        return "redirect:/formFilterModel";
+    }
+
+    @GetMapping("/formFilterModel")
+    public String formFilterModel(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("model", modelService.findModelByBrand(filterService.getBrand()));
+        filterService.setModel(0);
+        return "filterModel";
+    }
+
+    @PostMapping("/filterModel")
+    public String filterModel(@ModelAttribute Ad ad,
+                             HttpSession session,
+                             @RequestParam("model.id") String idModel) {
+        User user = (User) session.getAttribute("user");
+        ad.setUser(user);
+        filterService.setModel(Integer.parseInt(idModel));
+        return "redirect:/formAdsFilter";
+    }
+
+    @GetMapping("/formAdsFilter")
+    public String formAdsFilter(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("ads", adService.findAdCategoryAndBodyAndBrandAndModel(
+                categoryService.findById(filterService.getCategory()).getName(),
+                bodyService.findById(filterService.getBody()).getType(),
+                brandService.findById(filterService.getBrand()).getName(),
+                modelService.findById(filterService.getModel()).getName())
+        );
+        return "ads";
+    }
+
+    @GetMapping("/deleteAd/{adId}")
+    public String deleteAd(Model model, @PathVariable("adId") int id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
+        adService.delete(id);
+        return "redirect:/ads";
+    }
+
+    @GetMapping("/setSold/{adId}")
+    public String setSold(Model model, @PathVariable("adId") int id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
+        adService.setSold(id);
+        return "redirect:/ads";
+    }
+
 }

@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS history_owner(
 
 CREATE TABLE IF NOT EXISTS ad(
     id SERIAL PRIMARY KEY,
+    name TEXT,
     description TEXT,
     car_id INT NOT NULL REFERENCES car(id),
     photo BYTEA,

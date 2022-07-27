@@ -13,6 +13,8 @@ public class Ad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String name;
+
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -41,6 +43,14 @@ public class Ad {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -110,6 +120,7 @@ public class Ad {
         Ad ad = (Ad) o;
         return id == ad.id
                 && sold == ad.sold
+                && Objects.equals(name, ad.name)
                 && Objects.equals(description, ad.description)
                 && Objects.equals(car, ad.car)
                 && Arrays.equals(photo, ad.photo)
@@ -118,7 +129,7 @@ public class Ad {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, description, car, sold, user);
+        int result = Objects.hash(id, name, description, car, sold, user);
         result = 31 * result + Arrays.hashCode(photo);
         return result;
     }
@@ -126,11 +137,12 @@ public class Ad {
     @Override
     public String toString() {
         return "Post{"
-                + "id=" + id
+                + "id:" + id
+                + ", name='" + name + '\''
                 + ", description='" + description + '\''
-                + ", car=" + car
-                + ", sold=" + sold
-                + ", user=" + user
+                + ", car:" + car
+                + ", sold:" + sold
+                + ", user:" + user
                 + '}';
     }
 }

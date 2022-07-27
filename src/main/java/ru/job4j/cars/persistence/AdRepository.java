@@ -3,7 +3,6 @@ package ru.job4j.cars.persistence;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.Ad;
-import ru.job4j.cars.model.Car;
 
 import javax.persistence.Query;
 import java.sql.Timestamp;
@@ -117,6 +116,43 @@ public class AdRepository implements DBStore {
         );
     }
 
+    public List<Ad> findMyAds(String email) {
+        return tx(
+                session -> session.createQuery(
+                        "select distinct a from Ad a "
+                                + "join fetch a.car c "
+                                + "join fetch c.engine e "
+                                + "join fetch c.brand br "
+                                + "join fetch c.category ca "
+                                + "join fetch br.models m "
+                                + "join fetch c.body bo "
+                                + "where a.user.email = :userEmail "
+                                + "order by a.created desc", Ad.class
+                ).setParameter("userEmail", email).list(), sf
+        );
+    }
+
+    public List<Ad> findAdCategoryAndBodyAndBrandAndModel(String categoryName,
+                                                          String bodyType,
+                                                          String brandName,
+                                                          String modelName) {
+        return tx(
+                session -> session.createQuery(
+                        "select distinct a from Ad a "
+                                + "join fetch a.car c "
+                                + "join fetch c.brand br "
+                                + "join fetch c.category ca "
+                                + "join fetch br.models m "
+                                + "join fetch c.body bo "
+                                + "where ca.name = :caName and bo.type = :boType and br.name = :brName and m.name = :mName "
+                                + "order by a.created desc", Ad.class
+                ).setParameter("caName", categoryName).
+                        setParameter("boType", bodyType).
+                        setParameter("brName", brandName).
+                        setParameter("mName", modelName).list(), sf
+        );
+    }
+
     public Ad findById(int id) {
         return tx(
                 session -> session.get(Ad.class, id), sf
@@ -135,6 +171,21 @@ public class AdRepository implements DBStore {
                                 + "join fetch c.body bo "
                                 + "order by a.created desc", Ad.class
                 ).list(), sf
+        );
+    }
+    public List<Ad> findNewCar(boolean newCar, boolean sold) {
+        return tx(
+                session -> session.createQuery(
+                        "select distinct a from Ad a "
+                                + "join fetch a.car c "
+                                + "join fetch c.engine e "
+                                + "join fetch c.brand br "
+                                + "join fetch c.category ca "
+                                + "join fetch br.models m "
+                                + "join fetch c.body bo "
+                                + "where a.newCar = :aNewCar and a.sold = :aSold "
+                                + "order by a.created desc", Ad.class
+                ).setParameter("aNewCar", newCar).setParameter("aSold", sold).list(), sf
         );
     }
 
@@ -163,11 +214,9 @@ public class AdRepository implements DBStore {
         );
     }
 
-    public void update(Ad ad, String idCar) {
+    public void update(Ad ad) {
         tx(
                 session -> {
-                    Car car = session.find(Car.class, Integer.parseInt(idCar));
-                    ad.setCar(car);
                     session.merge(ad);
                     return new Object();
                 }, sf

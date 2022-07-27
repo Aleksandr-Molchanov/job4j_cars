@@ -59,4 +59,28 @@ public class FilterStore {
     public void setCar(int id) {
         filterService.setCar(id);
     }
+
+    public Integer getAllCar() {
+        return filterService.getAllCar();
+    }
+
+    public void setAllCar(int id) {
+        filterService.setAllCar(id);
+    }
+
+    public Integer getNewCar() {
+        return filterService.getNewCar();
+    }
+
+    public void setNewCar(int id) {
+        filterService.setNewCar(id);
+    }
+
+    public Integer getOldCar() {
+        return filterService.getOldCar();
+    }
+
+    public void setOldCar(int id) {
+        filterService.setOldCar(id);
+    }
 }

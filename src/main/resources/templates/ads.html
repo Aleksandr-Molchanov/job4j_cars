@@ -27,10 +27,12 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link active" th:href="@{/ads}">Все</a>
                 <a class="nav-item nav-link" th:href="@{/passenger}">Легковые</a>
-                <a class="nav-item nav-link" th:href="@{/lorry}">Коммерческие</a>
+                <a class="nav-item nav-link" th:href="@{/commercial}">Коммерческие</a>
                 <a class="nav-item nav-link" th:href="@{/special}">Спец. Техника</a>
-                <form th:action="@{/formSelectCategory}" method="GET">
-                    <button type="submit" class="btn btn-primary mt-3">Разместить объявление</button>
+                <a class="nav-item nav-link" th:href="@{/adsSold}" style="margin-right: 75px">Архив</a>
+                <a style="color: limegreen" class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/myAds}">Мои объявления</a>
+                <form class="text-right" th:action="@{/formSelectCategory}" method="GET">
+                    <button type="submit" class="btn btn-success" style="margin-right: 20px">Разместить объявление</button>
                 </form>
                 <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/formLogin}">
                     <span th:text="${user.name}"></span>
@@ -43,45 +45,68 @@
             </div>
         </div>
     </nav>
-
     <div class="row">
-        <div class="btn-group" th:if="${user.name != 'Гость'}">
+        <div class="btn-group">
             <form th:action="@{/ads}" method="GET">
-                <button type="submit" class="btn btn-primary mt-3">Все</button>
+                <button type="submit" class="btn btn-outline-primary">Все</button>
             </form>
-            <form th:action="@{/adsNoSold}" method="GET">
-                <button type="submit" class="btn btn-primary mt-3">Новые</button>
+            <form th:action="@{/adsNew}" method="GET">
+                <button type="submit" class="btn btn-outline-primary">Новые</button>
             </form>
-            <form th:action="@{/adsSold}" method="GET">
-                <button type="submit" class="btn btn-primary mt-3" style="margin-right: 16px">С пробегом</button>
+            <form th:action="@{/adsNoNew}" method="GET">
+                <button type="submit" class="btn btn-outline-primary" style="margin-right: 20px">С пробегом</button>
             </form>
-        </div>
-        <div class="btn-group" th:if="${user.name != 'Гость'}">
-            <form th:action="@{/ads}" method="GET">
-                <button type="submit" class="btn btn-primary mt-3">Выбрать марку</button>
-            </form>
-            <form th:action="@{/adsNoSold}" method="GET">
-                <button type="submit" class="btn btn-primary mt-3">Выбрать кузов</button>
-            </form>
-            <form th:action="@{/adsSold}" method="GET">
-                <button type="submit" class="btn btn-primary mt-3">С пробегом</button>
+            <form th:action="@{/formFilterCategory}" method="GET">
+                <button type="submit" class="btn btn-primary">Применить фильтр</button>
             </form>
         </div>
         <table class="table">
-            <thead>
-            <tr>
-                <th scope="col" style="width: 10%; text-align: center">Название</th>
-                <th scope="col" style="width: 10%; text-align: center">Автор</th>
-            </tr>
-            </thead>
+            <style>
+                .outline1 {
+                    border: 2px solid limegreen;
+                    color: limegreen;
+                    padding: 0 10px;
+                }
+                .outline2 {
+                    border: 2px solid gray;
+                    color: gray;
+                    padding: 0 10px;
+                }
+            </style>
             <tbody>
             <tr th:each="ad: ${ads}">
                 <div class="button updateAd">
-                    <td>
-                        <img th:width="150" th:high="150" th:src="@{|/photoAd/${ad.id}|}">
-                        <a th:href="@{|/descriptionAd/${ad.id}|}" th:text="${ad.description}"></a>
+                    <td th:width="160" >
+                        <a th:href="@{|/descriptionAd/${ad.id}|}">
+                            <img th:width="150" th:high="150" th:src="@{|/photoAd/${ad.id}|}">
+                        </a>
                     </td>
-                    <td th:text="${ad.user.name}" />
+                    <td th:width="700">
+                        <h5><span th:text="${ad.name}"></span></h5>
+                        <p>
+                            <span th:text="${ad.car.category.name}"></span>
+                            <span>/ </span>
+                            <span th:text="${ad.car.body.type}"></span>
+                            <span>/ </span>
+                            <span th:text="${ad.car.engine.name}"></span>
+                        </p>
+                        <div>
+                            <p>
+                                <span class="outline2" th:if="${ad.sold}">Продано</span>
+                                <span class="outline1" th:if="${!ad.sold}">В продаже</span>
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <p>
+                            <span>Автор: </span>
+                            <span th:text="${ad.user.name}"></span>
+                        </p>
+                        <p>
+                            <span>Добавлено: </span>
+                            <span th:text="${#dates.format(ad.created, 'dd-MMM-yyyy')}"></span>
+                        </p>
+                    </td>
                 </div>
             </tr>
             </tbody>
